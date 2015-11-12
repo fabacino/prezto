@@ -1,7 +1,9 @@
 #
-# A theme based on Steve Losh's Extravagant Prompt with vcs_info integration.
+# A theme based on the steeef and nicoulaj themes. (work in progress)
 #
 # Authors:
+#   fabacino <fabacino@gmail.com>
+#   Julien Nicoulaud <julien.nicoulaud@gmail.com>
 #   Steve Losh <steve@stevelosh.com>
 #   Bart Trojanowski <bart@jukie.net>
 #   Brian Carper <brian@carper.ca>
@@ -49,16 +51,6 @@ function prompt_fbn_setup {
       "%F{33}"  # blue
       "%F{160}" # red
       "%F{64}"  # green
-
-#yellow    #b58900  3/3 yellow   136 #af8700 60  10  65 181 137   0  45 100  71
-#orange    #cb4b16  9/3 brred    166 #d75f00 50  50  55 203  75  22  18  89  80
-#red       #dc322f  1/1 red      160 #d70000 50  65  45 220  50  47   1  79  86
-#magenta   #d33682  5/5 magenta  125 #af005f 50  65 -05 211  54 130 331  74  83
-#violet    #6c71c4 13/5 brmagenta 61 #5f5faf 50  15 -45 108 113 196 237  45  77
-#blue      #268bd2  4/4 blue      33 #0087ff 55 -10 -45  38 139 210 205  82  82
-#cyan      #2aa198  6/6 cyan      37 #00afaf 60 -35 -05  42 161 152 175  74  63
-#green     #859900  2/2 green     64 #5f8700 60 -20  65 133 153   0  68 100  60
-      
     )
   else
     fbn_colors=(
@@ -71,11 +63,8 @@ function prompt_fbn_setup {
   fi
 
   # Customizable parameters.
-  local user_char='❯'
-  local root_char='❯❯❯'
-  local success_color='%F{071}'
-  local failure_color='%F{124}'
-  local vcs_info_color='%F{242}'
+  local success_color='${fbn_colors[5]}'
+  local failure_color='${fbn_colors[4]}'
 
   # Formats:
   #   %b - branchname
@@ -86,8 +75,8 @@ function prompt_fbn_setup {
   #   %S - path in the repository
   local branch_format="(${fbn_colors[1]}%b%f%u%c)"
   local action_format="(${fbn_colors[5]}%a%f)"
-  local unstaged_format="${fbn_colors[2]}●%f"
-  local staged_format="${fbn_colors[5]}●%f"
+  local unstaged_format="${fbn_colors[2]}%B●%b%f"
+  local staged_format="${fbn_colors[5]}%B●%b%f"
 
   # Set vcs_info parameters.
   zstyle ':vcs_info:*' enable bzr git hg svn
@@ -102,8 +91,7 @@ function prompt_fbn_setup {
   zstyle ':prezto:module:python:info:virtualenv' format '(%v)'
 
   # Define prompts.
-  PROMPT="${fbn_colors[3]}%n%f at ${fbn_colors[2]}%m%f> "
-  PROMPT="%(?.${success_color}.${failure_color})%(!.${root_char}.${user_char})%b%f "
+  PROMPT="${fbn_colors[3]}%n%f@${fbn_colors[2]}%m%f%(?.${success_color}.${failure_color})>%b%f "
   RPROMPT="${fbn_colors[5]}%~%f "'${vcs_info_msg_0_}'" "'$python_info[virtualenv]'
 }
 
