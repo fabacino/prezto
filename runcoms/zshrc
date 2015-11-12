@@ -36,9 +36,3 @@ alias gipl='git pull'
 alias gips='git push'
 alias gir='git rebase'
 alias gis='git status'
-
-# xfce4-terminal is capable of displaying 256 colors, but doesn't set the
-# environment variable TERM accordingly. We therefore do it by ourselvesl
-if [[ "$COLORTERM" == 'xfce4-terminal' ]]; then
-  export TERM=xterm-256color
-fi
