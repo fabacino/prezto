@@ -6,19 +6,12 @@
 #
 
 #
-# Browser
-#
-
-if [[ "$OSTYPE" == darwin* ]]; then
-  export BROWSER='open'
-fi
-
-#
 # Editors
 #
 
-export EDITOR='nano'
-export VISUAL='nano'
+export EDITOR='emacsclient -c'
+export VISUAL='emacsclient -c'
+export TERMINAL='xfce4-terminal'
 export PAGER='less'
 
 #
