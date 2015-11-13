@@ -10,6 +10,14 @@
 #   steeef <steeef@gmail.com>
 #   Sorin Ionescu <sorin.ionescu@gmail.com>
 #
+# Features:
+#   - One line.
+#   - Username and machine name in the left prompt.
+#   - VCS and python virtualenv information in the right prompt.
+#   - No unnecessary whitespace in the right prompt.
+#   - Fully compatible with dumb terminals.
+#   - Uses a different color depending on if the last command succeeded/failed.
+#
 # Screenshots:
 #   http://i.imgur.com/HyRvv.png
 #
@@ -17,17 +25,27 @@
 function prompt_fbn_precmd {
   # Check for untracked files or updated submodules since vcs_info does not.
   if [[ -n $(git ls-files --other --exclude-standard 2> /dev/null) ]]; then
-    branch_format="(${fbn_colors[1]}%b%f%u%c${fbn_colors[4]}●%f)"
+    branch_format="(${basic_branch_format}${fbn_colors[4]}%B${vcs_char}%%b%f)"
   else
-    branch_format="(${fbn_colors[1]}%b%f%u%c)"
+    branch_format="(${basic_branch_format})"
   fi
 
   zstyle ':vcs_info:*:prompt:*' formats "${branch_format}"
 
   vcs_info 'prompt'
 
+  # Build prompt on the right side depending on the current directory.
+  RPROMPT="${basic_rprompt}"
+
+  # Add vcs_info to prompt, if present.
+  if [[ ${#vcs_info_msg_0_} -gt 0 ]]; then
+    RPROMPT="${RPROMPT} "'${vcs_info_msg_0_}'
+  fi
+
+  # Add python virtualenv info to prompt, if present.
   if (( $+functions[python-info] )); then
     python-info
+    RPROMPT="${RPROMPT} "'$python_info[virtualenv]'
   fi
 }
 
@@ -40,7 +58,7 @@ function prompt_fbn_setup {
   autoload -Uz add-zsh-hook
   autoload -Uz vcs_info
 
-  # Add hook for calling vcs_info before each command.
+  # Add hook to adjust format for the right prompt.
   add-zsh-hook precmd prompt_fbn_precmd
 
   # Use extended color pallete if available.
@@ -62,6 +80,19 @@ function prompt_fbn_setup {
     )
   fi
 
+  # Use colors sparingly when in dumb terminal. Also avoid unicode characters.
+  if [[ "$TERM" == (linux|dumb|*bsd*) ]]; then
+    local user='%n'
+    local machine='%m'
+    local char='>'
+    vcs_char='*'
+  else
+    local user='${fbn_colors[3]}%n%f'
+    local machine='${fbn_colors[2]}%m%f'
+    local char='❯'
+    vcs_char='●'
+  fi
+
   # Customizable parameters.
   local success_color='${fbn_colors[5]}'
   local failure_color='${fbn_colors[4]}'
@@ -73,10 +104,11 @@ function prompt_fbn_setup {
   #   %a - action (e.g. rebase-i)
   #   %R - repository path
   #   %S - path in the repository
-  local branch_format="(${fbn_colors[1]}%b%f%u%c)"
+  basic_branch_format="${fbn_colors[1]}%b%f%u%c"
+  local branch_format="(${basic_branch_format})"
   local action_format="(${fbn_colors[5]}%a%f)"
-  local unstaged_format="${fbn_colors[2]}%B●%b%f"
-  local staged_format="${fbn_colors[5]}%B●%b%f"
+  local unstaged_format="${fbn_colors[2]}%B${vcs_char}%b%f"
+  local staged_format="${fbn_colors[5]}%B${vcs_char}%b%f"
 
   # Set vcs_info parameters.
   zstyle ':vcs_info:*' enable bzr git hg svn
@@ -90,9 +122,13 @@ function prompt_fbn_setup {
   # Set python-info parameters.
   zstyle ':prezto:module:python:info:virtualenv' format '(%v)'
 
+  # Basic prompt on the right side contains only the current path. Additional
+  # information might get added in the hook function.
+  basic_rprompt="${fbn_colors[5]}%~%f"
+
   # Define prompts.
-  PROMPT="${fbn_colors[3]}%n%f@${fbn_colors[2]}%m%f%(?.${success_color}.${failure_color})>%b%f "
-  RPROMPT="${fbn_colors[5]}%~%f "'${vcs_info_msg_0_}'" "'$python_info[virtualenv]'
+  PROMPT="${user}@${machine}%(?.${success_color}.${failure_color})${char}%b%f "
+  RPROMPT="${basic_rprompt}"
 }
 
 prompt_fbn_setup "$@"
