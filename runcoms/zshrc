@@ -12,14 +12,22 @@ fi
 
 # Customize to your needs...
 
+# Select first match on ambiguous completion
+setopt menu_complete
+
+# Emacs-like navigation inside menuselect (C-f and C-b are already available)
+zmodload zsh/complist
+bindkey -M menuselect '^n' down-line-or-search
+bindkey -M menuselect '^p' up-line-or-search
+
 # Aliases
 alias cp='cp -i'
 alias mv='mv -i'
 alias rm='rm -i'
 alias ll='ls -l'
 alias la='ls -la'
-alias emacs="XMODIFIERS='' emacs"
-alias skype="XMODIFIERS='' skype"
+#alias emacs="XMODIFIERS='' emacs"
+#alias skype="XMODIFIERS='' skype"
 
 # git stuff
 alias gia='git add'
