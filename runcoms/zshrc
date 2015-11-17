@@ -17,8 +17,15 @@ setopt menu_complete
 
 # Emacs-like navigation inside menuselect (C-f and C-b are already available)
 zmodload zsh/complist
-bindkey -M menuselect '^n' down-line-or-search
-bindkey -M menuselect '^p' up-line-or-search
+bindkey -M menuselect '^n' down-line-or-history
+bindkey -M menuselect '^p' up-line-or-history
+bindkey -M menuselect '^s' history-incremental-search-forward
+bindkey -M menuselect '^r' history-incremental-search-backward
+bindkey -M menuselect '^ ' accept-and-hold
+bindkey -M menuselect '^M' .accept-line
+
+# 10 second wait if you do something that will delete everything
+setopt RM_STAR_WAIT
 
 # Aliases
 alias cp='cp -i'
