@@ -13,7 +13,7 @@ fi
 # Customize to your needs...
 
 # Select first match on ambiguous completion
-setopt menu_complete
+#setopt menu_complete
 
 # Emacs-like navigation inside menuselect (C-f and C-b are already available)
 zmodload zsh/complist
