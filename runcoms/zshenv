@@ -12,6 +12,7 @@ fi
 
 # xfce4-terminal is capable of displaying 256 colors, but doesn't set the
 # environment variable TERM accordingly. We therefore do it by ourselves.
-if [[ "$COLORTERM" == 'xfce4-terminal' ]]; then
+# The same applies to the MSYS2 terminal.
+if [[ "$COLORTERM" == 'xfce4-terminal' || "$OSTYPE" == 'msys' ]]; then
   export TERM=xterm-256color
 fi
