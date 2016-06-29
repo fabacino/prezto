@@ -9,9 +9,16 @@
 # Editors
 #
 
-export EDITOR='emacsclient -c'
-export VISUAL='emacsclient -c'
-export TERMINAL='xfce4-terminal'
+if [[ "$OSTYPE" == 'msys' ]]; then
+   export EDITOR='emacs -Q'
+   export VISUAL='emacs -Q'
+   export TERMINAL='mintty'
+   export MINGW_INSTALLS='mingw64'
+else
+    export EDITOR='emacsclient -c'
+    export VISUAL='emacsclient -c'
+    export TERMINAL='xfce4-terminal'
+fi
 export PAGER='less'
 
 #
