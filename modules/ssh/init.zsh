@@ -10,6 +10,11 @@ if [[ "$OSTYPE" == darwin* ]] || (( ! $+commands[ssh-agent] )); then
   return 1
 fi
 
+# Does not work properly on MSYS2 because of missing options of ps command.
+if [[ "$OSTYPE" == 'msys' ]]; then
+  return 1
+fi
+
 # Set the path to the SSH directory.
 _ssh_dir="$HOME/.ssh"
 
